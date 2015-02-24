@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="../css/reset.css" rel="stylesheet" type="text/css" />
+<style>
+.gallery {
+	background: grey;
+	width: 500px;
+	height: 400px;
+	border: dashed 3px #088d9e;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+}
+
+.gallery-show-box {
+	width: 100%;
+	height: 300px;
+	overflow: hidden;
+}
+
+.gallery-show-box>img {
+	display: block;
+	margin-top: 25px;
+	margin-left: auto;
+	margin-right: auto;
+	height: 250px;
+}
+
+.gallery-pic-box {
+	background: pink;
+	width: 100%;
+	height: 100px;
+}
+
+.gallery-prev-button {
+	width: 25px;
+	height: 100%;
+	float: left;
+}
+
+.gallery-pic-list {
+	background: black;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	position: absolute;
+	display: inline-block;
+	border: 1px solid red;
+	width: 2000px;
+}
+
+.gallery-pic-clipper {
+	width: 450px;
+	height: 100%;
+	position: relative;
+	float: left;
+	overflow: hidden;
+}
+
+.gallery-pic-item {
+	width: 80px;
+	height: 100%;
+	background: red;
+	border: 1px solid;
+	float: left;
+	transform: rotate(36deg);
+}
+
+.gallery-next-button {
+	width: 25px;
+	height: 98px;
+	float: left;
+}
+
+.gallery-file {
+	display: none;
+}
+
+</style>
+<script type="text/javascript">
+	console.log("helllooooooooo");
+	/* function move(target, to) { 일반 애니메이션
+		if (target.style.left == "")
+			target.style.left = "0px";
+
+		var from = parseInt(target.style.left);
+		var to = parseInt(to);
+		to = to + from;
+
+		var id = setInterval(function() {
+			from += 1 * (to < from ? -1 : 1);
+
+			if (from == to) {
+				clearInterval(id);
+				target.style.left = to + "px";
+				return;
+			}
+			target.style.left = from + "px";
+		}, 1);
+	} */
+	/* function move(target,property, to) { 프로퍼티 추가
+	if (target.style[property] == "")
+		target.style[property] = "0px";
+
+	var from = parseInt(target.style[property]);
+	var to = parseInt(to);
+	to = to + from;
+
+	var id = setInterval(function() {
+		from += 1 * (to < from ? -1 : 1);
+
+		if (from == to) {
+			clearInterval(id);
+			target.style[property] = to + "px";
+			return;
+		}
+		target.style[property] = from + "px";
+	}, 1);
+	} */
+	/* function move(target,property, to,duration) {	//애니메이션은 기간이 필요하다! 구래서 duration을 써서 기간을 정해줌
+		if (target.style[property] == "")
+			target.style[property] = "0px";
+
+		var from = parseInt(target.style[property]);
+		var to = parseInt(to);
+		to = to + from;
+		var start = new Date;
+
+		var id = setInterval(function() {
+			var timePassed = new Date - start;
+			var progress = timePassed / duration; // 0 < progress < 1
+ 			
+			if(progress > 1) progress = 1;
+			
+			target.style[property] = (from + (to - from) * progress) + "px";
+			
+			if(progress == 1) clearInterval(id);
+
+		}, 1);
+	} */
+	function moveby(target, property, by, duration, easing, callback) { //애니메이션은 기간이 필요하다! 구래서 duration을 써서 기간을 정해줌
+		if (target.style[property] == "")
+			target.style[property] = "0px";
+
+		var from = parseInt(target.style[property]);
+		var by = parseInt(by);
+		by = by + from;
+		var start = new Date;
+
+		var id = setInterval(
+				function() {
+					var timePassed = new Date - start;
+					var progress = timePassed / duration; // 0 < progress < 1
+ 			
+			if(progress > 1) progress = 1;
+
+					if (easing)
+						target.style[property] = (from + (by - from)
+								* easing(progress))
+								+ "px";
+					else
+						target.style[property] = (from + (by - from) * progress)
+								+ "px";
+
+					if (progress == 1)
+						clearInterval(id);
+					if (callback)
+						callback();
+
+				}, 1);
+	}
+	function moveTo(target, property, to, duration, easing, callback) { //애니메이션은 기간이 필요하다! 구래서 duration을 써서 기간을 정해줌
+		if (target.style[property] == "")
+			target.style[property] = "0px";
+
+		var from = parseInt(target.style[property]);
+		var to = parseInt(to);
+
+		var start = new Date;
+
+		var id = setInterval(
+				function() {
+					var timePassed = new Date - start;
+					var progress = timePassed / duration; // 0 < progress < 1
+ 			
+			if(progress > 1) progress = 1;
+
+					if (easing)
+						target.style[property] = (from + (to - from)
+								* easing(progress))
+								+ "px";
+					else
+						target.style[property] = (from + (to - from) * progress)
+								+ "px";
+
+					if (progress == 1)
+						clearInterval(id);
+					if (callback)
+						callback();
+
+				}, 1);
+	}
+	/* function opacity(target, property, by, duration, easing, callback) { //애니메이션은 기간이 필요하다! 구래서 duration을 써서 기간을 정해줌
+		if (target.style[property] == "")
+			target.style[property] = "0";
+
+		var from = parseInt(target.style[property]);
+		var by = parseInt(by);
+		by = by + from;
+		var start = new Date;
+
+		var id = setInterval(
+				function() {
+					var timePassed = new Date - start;
+					var progress = timePassed / duration; // 0 < progress < 1
+ 			
+			if(progress > 1) progress = 1;
+
+					if (easing)
+						target.style[property] = (from + (by - from)
+	 * easing(progress));
+					else
+						target.style[property] = (from + (by - from) * progress);
+
+					if (progress == 1)
+						clearInterval(id);
+					if (callback)
+						callback();
+
+				}, 1);
+	} */
+	function picClick() {
+		{
+			if (event.target.tagName != "IMG")
+				return;
+			var img = document.createElement("img");
+			//var galleryshowbox = document.getElementById("gallery-show-box");
+			var galleryshowbox = document.querySelector(".gallery-show-box");
+			while (last = galleryshowbox.lastChild)
+				galleryshowbox.removeChild(galleryshowbox.lastChild);
+			img.src = event.target.src;
+			img.addEventListener("show", function(e) {
+				alert("show show SHOW!");
+			});
+			img.style.height = "200px";
+			//img.style.opacity = "0";
+			event.stopPropagation();
+			event.preventDefault();
+			/* alert(event.currentTarget.tagName); */
+			galleryshowbox.appendChild(img);
+			//opacity(img,"opacity",1,2000,linear);
+			moveby(img, "height", "250px", 1000, aa);
+			moveTo(img, "height", "250px", 1000, aa);
+		}
+	}
+	window.addEventListener("load", function() {
+		var fileButton = document.getElementById("file-button");
+		var imgs = document.querySelector(".gallery-pic-list");
+		var img1 = document.querySelector(".gallery-pic1");
+		imgs.style.left = "0px";
+
+		var galleryPrevButton = document.querySelector(".gallery-prev-button");
+		var galleryNextButton = document.querySelector(".gallery-next-button");
+		galleryPrevButton.addEventListener("click", function() {
+			move(imgs, "left", "-120px", 2000, aa);
+
+		});
+		galleryNextButton.addEventListener("click", function() {
+			move(imgs, "left", "120px", 2000, linear);
+		});
+		/* var imgs = document.getElementById("gallery-pic-list")
+		var img1 = document.getElementById("gallery-pic1");
+		var img2 = document.getElementById("gallery-pic2");
+		var img3 = document.getElementById("gallery-pic3"); */
+		/* imgs.onclick = picClick;
+		img1.onclick = picClick; */
+		imgs.addEventListener("click", picClick, false);
+		/* img1.addEventListener("click", picClick, false); */
+		fileButton.addEventListener("click", function() {
+			/* var event = new MouseEvent("click",{ 현재방식
+				'view':window,
+				'bublles':true,
+				'cancelable':true */
+			var event = document.createEvent("MouseEvent");
+			event.initEvent("click", true, true); //event type, bubbles, cacelable
+			/* }); */
+			var file = document.getElementById("gallery-file");
+			file.dispatchEvent(event);
+		});
+		/* img1.onclick = picClick;
+		img2.onclick = picClick;
+		img3.onclick = picClick; */
+		/* img1.onclick = function() {
+			var img = document.createElement("img");
+			var galleryshowbox = document.getElementById("gallery-show-box");
+			var last;
+			while(last = galleryshowbox.lastChild)
+				galleryshowbox.removeChild(galleryshowbox.lastChild);
+			
+			img.src = "1.jpg";
+
+			galleryshowbox.appendChild(img);
+		}
+		
+		img2.onclick = function() {
+			var img = document.createElement("img");
+			var galleryshowbox = document.getElementById("gallery-show-box");
+			while(last = galleryshowbox.lastChild)
+				galleryshowbox.removeChild(galleryshowbox.lastChild);
+			img.src = "2.jpg";
+
+			galleryshowbox.appendChild(img);
+		}
+		
+		img3.onclick = function() {
+			var img = document.createElement("img");
+			var galleryshowbox = document.getElementById("gallery-show-box");
+			while(last = galleryshowbox.lastChild)
+				galleryshowbox.removeChild(galleryshowbox.lastChild);
+			img.src = "3.jpg";
+
+			galleryshowbox.appendChild(img);
+		} */
+	});
+	function aa(progress) {
+		return Math.pow(progress, 2);
+	}
+	function linear(progress) {
+		return progress;
+	}
+</script>
+</head>
+
+<body>
+	<div class="gallery">
+		<div class="gallery-show-box"></div>
+		<div class="gallery-pic-box">
+			<div class="gallery-prev-button">◀</div>
+			<div class="gallery-pic-clipper">
+				<ul class="gallery-pic-list">
+					<li class="gallery-pic-item"><img src="1.jpg"
+						style="width: 100%; height: 100%;" /></li>
+					<li class="gallery-pic-item"><img src="2.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic2" /></li>
+					<li class="gallery-pic-item"><img src="3.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic3" /></li>
+					<li class="gallery-pic-item"><img src="1.jpg"
+						style="width: 100%; height: 100%;" /></li>
+					<li class="gallery-pic-item"><img src="2.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic2" /></li>
+					<li class="gallery-pic-item"><img src="3.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic3" /></li>
+					<li class="gallery-pic-item"><img src="1.jpg"
+						style="width: 100%; height: 100%;" /></li>
+					<li class="gallery-pic-item"><img src="2.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic2" /></li>
+					<li class="gallery-pic-item"><img src="3.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic3" /></li>
+					<li class="gallery-pic-item"><img src="1.jpg"
+						style="width: 100%; height: 100%;" /></li>
+					<li class="gallery-pic-item"><img src="2.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic2" /></li>
+					<li class="gallery-pic-item"><img src="3.jpg"
+						style="width: 100%; height: 100%;" id="gallery-pic3" /></li>
+				</ul>
+			</div>
+			<div class="gallery-next-button">▶</div>
+		</div>
+		<input type="file" class="gallery-file" id="gallery-file" /> <span
+			id="file-button" class="file-button">파일선택</span>
+
+	</div>
+</body>
+</html>
